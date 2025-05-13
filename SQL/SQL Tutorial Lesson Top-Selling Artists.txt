@@ -1,0 +1,15 @@
+-- link - https://datalemur.com/questions/sql-cte-subquery-concert-revenue
+
+WITH cal_table AS (
+SELECT
+  *,
+  concert_revenue / number_of_members AS rev_per_mem ,
+  rank() over(partition by genre order by concert_revenue / number_of_members DESC) as rnk
+FROM concerts
+)
+
+SELECT
+  artist_name , concert_revenue, genre , number_of_members, rev_per_mem
+FROM cal_table
+WHERE rnk = 1
+ORDER BY rev_per_mem DESC;
